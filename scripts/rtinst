@@ -555,7 +555,7 @@ apt-get -qqy install aptitude >> $logfile 2>&1
 
 echo "Upgrading packages" | tee -a $logfile
 export DEBIAN_FRONTEND=noninteractive
-aptitude -q=5 -y upgrade >> $logfile 2>&1
+aptitude upgrade >> $logfile 2>&1
 if ! [ $? = 0 ]; then
   echo "Problem upgrading packages. Run 'aptitude upgrade' successfully and rerun the script" && exit
 fi
@@ -564,7 +564,7 @@ aptitude clean && aptitude autoclean >> $logfile 2>&1
 
 #install the packages needed
 echo "Installing required packages" | tee -a $logfile
-aptitude -q=5 -y install libtool >> $logfile 2>&1
+aptitude install libtool >> $logfile 2>&1
 for package_name in $package_list
   do
     if [ $(apt-cache show -q=0 $package_name 2>&1 | grep -c "No packages found") -eq 0 ]; then
@@ -578,7 +578,7 @@ for package_name in $package_list
 
 # Installs a package needed to prevent arm64 architectures from "WARNING: Unable to start rtorrent"
 if [ "$(uname --m)" == "aarch64" ] || [ "$(dpkg --print-architecture)" == "arm64" ] ; then
-    aptitude -q=5 -y install libxmlrpc-core-c3-dev >> $logfile 2>&1
+    aptitude install libxmlrpc-core-c3-dev >> $logfile 2>&1
 fi
 
 test -z "$install_list" || aptitude install $install_list >> $logfile 2>&1
@@ -587,7 +587,7 @@ if ! [ $? = 0 ]; then
 fi
 
 if [[ $phpver =~ php7.[0-9] ]]; then
-  aptitude -q=5 -y install $phpver-mbstring >> $logfile 2>&1
+  aptitude install $phpver-mbstring >> $logfile 2>&1
 fi
 
 #install unrar package
@@ -614,7 +614,7 @@ if [ $osname = "Debian" ] && ! installed unrar; then
     rm -r $home/rar
   fi
 elif [ $osname = "Ubuntu" ]; then
-  aptitude -q=5 -y install unrar >> $logfile 2>&1
+  aptitude install unrar >> $logfile 2>&1
 fi
 
 if installed unrar; then
@@ -626,7 +626,7 @@ fi
 #install ffmpeg
 if ! [ $osname = "Raspbian" ] && [ $(dpkg-query -W -f='${Status}' "ffmpeg" 2>/dev/null | grep -c "ok installed") = 0 ]; then
   echo "Installing ffmpeg"
-  aptitude -q=5 -y install ffmpeg >> $logfile 2>&1
+  aptitude install ffmpeg >> $logfile 2>&1
 fi
 
 echo "Completed installation of required packages        "
@@ -713,7 +713,7 @@ ftpport=$(random 41005 48995)
 
 if [ $(dpkg-query -W -f='${Status}' "vsftpd" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
   echo "Installing vsftpd" | tee -a $logfile
-  aptitude -q=5 -y install vsftpd >> $logfile 2>&1
+  aptitude install vsftpd >> $logfile 2>&1
 fi
 
 sed -i '/^\(\s\|#\)*anonymous_enable/ c\anonymous_enable=NO' /etc/vsftpd.conf
